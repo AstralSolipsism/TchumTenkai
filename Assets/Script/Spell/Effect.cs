@@ -254,7 +254,25 @@ public abstract class 法术效果
 
     #region 效果管理系统
 
+    public static class 效果优先级系统
+    {
+        public static void 处理效果冲突(List<法术效果> 生效效果, 效果参数 参数)
+        {
+            // 按优先级排序并执行
+            var 排序效果 = 生效效果
+                .OrderByDescending(e => e.配置.优先级)
+                .ThenBy(e => e.宿主法术.spellLevel);
 
+            foreach (var 效果 in 排序效果)
+            {
+                if (效果.可发动())
+                {
+                    效果.效果发动(参数);
+                    if (参数.已修改强度) break; // 高优先级效果生效后终止
+                }
+            }
+        }
+    }
     public static class 效果查询系统
     {
         public static List<法术效果> 获取可用效果(生效区域 区域, 阵营类型 当前阵营)
@@ -325,6 +343,7 @@ public abstract class 法术效果
         public GameObject 主要目标;
         public List<GameObject> 次要目标;
         public Dictionary<string, float> 数值参数 = new();
+        
 
         // 状态信息
         public 法术效果 来源效果;

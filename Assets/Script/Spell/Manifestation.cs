@@ -84,6 +84,11 @@ public abstract class 法术形态 : MonoBehaviour
         }
         Destroy(实体);
     }
+
+    public virtual int 获取对抗加成(法术形态 其他形态)
+    {
+        return 0; // 默认无加成
+    }
 }
 
 
