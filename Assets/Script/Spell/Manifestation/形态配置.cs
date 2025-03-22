@@ -19,4 +19,15 @@ public class 形态配置 : ScriptableObject
     public bool 启用自动追踪;
     public float 追踪角度限制 = 45f;
     public float 伤害间隔 = 0.5f;
+
+    private System.Type 获取形态类型(ManifestationCategory 类型)
+    {
+        switch (类型)
+        {
+            case ManifestationCategory.Projectile: return typeof(Projectile);
+            case ManifestationCategory.Ray: return typeof(RayManifestation);
+            case ManifestationCategory.Shield: return typeof(Shield);
+            default: return typeof(法术形态);
+        }
+    }
 }

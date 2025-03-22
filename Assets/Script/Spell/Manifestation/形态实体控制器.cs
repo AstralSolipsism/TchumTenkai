@@ -21,4 +21,6 @@ public class 形态实体控制器 : MonoBehaviour //附加在形态实体预制
             所属形态.宿主法术.处理碰撞事件(other);
         }
     }
+
+
 }

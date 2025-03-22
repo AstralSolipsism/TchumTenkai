@@ -109,8 +109,8 @@ public abstract class 法术基础类 : MonoBehaviour
         // 配置的映射表更合适，这里简化为switch
         switch (类型)
         {
-            case ManifestationCategory.Projectile: return typeof(飞弹形态);
-            case ManifestationCategory.Ray: return typeof(射线形态);
+            case ManifestationCategory.Projectile: return typeof(Projectile);
+            case ManifestationCategory.Ray: return typeof(RayManifestation);
             // 其他类型映射...
             default: return typeof(法术形态);
         }
@@ -329,39 +329,62 @@ public abstract class 法术基础类 : MonoBehaviour
     #region 结构强度对抗
     public bool 结构强度对抗(法术基础类 其他法术)
     {
-        int 形态加成A = 获取形态加成(this, 其他法术);
-        int 形态加成B = 获取形态加成(其他法术, this);
+        int 形态加成A = 当前形态.获取对抗加成(其他法术.当前形态);
+        int 形态加成B = 其他法术.当前形态.获取对抗加成(当前形态);
+        int 强度差 = (cohesion + 形态加成A) - (其他法术.cohesion + 形态加成B);
 
-        int 强度差 = (cohesion + 形态加成A) - (其他法术.cohesion + 形态加成B);        
+        // 优先处理特殊形态逻辑
+        if (当前形态 != null && !当前形态.是否开始处理对抗(强度差))
+        {
+            return false;
+        }
 
+        // 常规对抗逻辑
         if (强度差 < 0)
         {
-            // 自身结构强度较低，被破坏
             破坏();
             return false;
         }
-        else if (强度差 >= 2)
+        else
         {
-            // 对方结构强度低2级以上，破坏对方
-            其他法术.破坏();
+            float 能效损失系数 = 获取能效损失系数(强度差);
+
+            // 应用形态影响
+            if (当前形态 != null)
+            {
+                能效损失系数 = 当前形态.影响能效损失系数(能效损失系数, 强度差);
+            }
+
+            float 能效损失值 = 其他法术.currentMana * 能效损失系数;
+
+            currentMana = Mathf.Max(0, currentMana - 能效损失值);
+
+            // 能效耗尽检查
+            if (currentMana <= 0)
+            {
+                破坏();
+                return false;
+            }
+
+            // 强度差>=2时破坏对方
+            if (强度差 >= 2)
+            {
+                其他法术.破坏();
+            }
             return true;
         }
-
-        // 进行能效计算
-        float 能效损失 = 其他法术.currentMana * (强度差 * 0.3f);
-        currentMana = Mathf.Max(0, currentMana - 能效损失);
-
-        // 如果当前魔力耗尽则销毁
-        if (currentMana <= 0) 破坏();
-        return true;
     }
 
-    public float 计算基础伤害()
+
+    protected virtual float 获取能效损失系数(int 强度差)
     {
-        float 能效系数 = currentMana / manaCost;
-        return power * 能效系数;
+        return 强度差 switch
+        {
+            0 => 1.0f,
+            1 => 0.6f,
+            _ => 0.3f // 默认值（强度差>=2时）
+        };
     }
-
     private int 获取形态加成(法术基础类 当前法术, 法术基础类 对方法术)
     {
         if (当前法术.当前形态 != null &&

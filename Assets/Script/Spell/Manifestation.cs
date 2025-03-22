@@ -11,6 +11,7 @@ public enum ManifestationCategory
     Shield,     // 护盾
     Beam,       // 持续光束
     AreaPulse,  // 区域脉冲
+    Summon,     // 召唤物
     Custom      // 其他待开发类型
 }
 
@@ -88,6 +89,21 @@ public abstract class 法术形态 : MonoBehaviour
     public virtual int 获取对抗加成(法术形态 其他形态)
     {
         return 0; // 默认无加成
+    }
+     public virtual int 获取结构强度加成(法术形态 对抗形态)
+    {
+        return 0;
+    }
+
+    public virtual bool 是否开始处理对抗(int 强度差)
+    {
+        return 强度差 >= 0; // 默认对抗逻辑
+    }
+
+    // 能效系数影响方法
+    public virtual float 影响能效损失系数(float 原始系数, int 强度差)
+    {
+        return 原始系数;
     }
 }
 
