@@ -176,12 +176,12 @@ public abstract class 法术效果
         }
         protected internal virtual void 执行持续逻辑()
         {
-            // 默认实现（兼容旧代码）
+            
             执行持续逻辑();
         }
         protected internal virtual void 执行持续逻辑(效果参数 参数)
         {
-            // 默认实现（兼容旧代码）
+            
             执行持续逻辑();
         }
     }
@@ -312,7 +312,7 @@ public abstract class 法术效果
     public class 效果参数
     {
         // 基础信息
-        public string 事件类型; // 必填
+        public string 事件类型; // 必填，待修改，枚举替代
         public GameObject 来源法术; // 必填
 
         // 时空信息

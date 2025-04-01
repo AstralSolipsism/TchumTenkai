@@ -30,6 +30,7 @@ public abstract class 法术基础类 : MonoBehaviour
     public float manaCost; //施法魔耗
     public float currentMana; //当前魔力
     public int power;//威力
+    public ManifestationTag Tags;
 
 
 
@@ -55,40 +56,35 @@ public abstract class 法术基础类 : MonoBehaviour
     #endregion
 
     #region 法术成分管理
-    private Dictionary<成分类型, List<法术成分>> 需求成分 = new();
+    private List<法术成分> 需求成分 = new List<法术成分>();
     private Dictionary<法术成分, bool> 完成状态 = new();
 
     public void 添加成分需求(法术成分 成分)
     {
-        if (!需求成分.ContainsKey(成分.类型))
-            需求成分[成分.类型] = new List<法术成分>();
-
-        需求成分[成分.类型].Add(成分);
-        完成状态[成分] = false;
+        需求成分.Add(成分);
+        完成状态[成分] = false; // 初始状态为未完成
     }
+
 
     public bool 尝试提交成分(成分类型 类型, object 参数)
     {
         bool 有进展 = false;
-        if (需求成分.TryGetValue(类型, out var 成分列表))
+        foreach (var 成分 in 需求成分.Where(c => c.类型 == 类型 && !c.已完成))
         {
-            foreach (var 成分 in 成分列表.Where(c => !c.已完成))
+            if (成分.验证条件(参数))
             {
-                if (成分.验证条件(参数))
-                {
-                    成分.提交进度();
-                    有进展 = true;
-                    if (成分.已完成)
-                        完成状态[成分] = true;
-                }
+                成分.提交进度();
+                有进展 = true;
+                if (成分.已完成)
+                    完成状态[成分] = true;
             }
         }
         return 有进展;
     }
 
     public IEnumerable<成分类型> 获取需求成分类型()
-    {
-        return 需求成分.Keys;
+    {        
+        return 需求成分.Select(c => c.类型).Distinct();
     }
     public bool 是否完成所有成分 => 完成状态.Values.All(v => v);
     #endregion
@@ -96,6 +92,7 @@ public abstract class 法术基础类 : MonoBehaviour
     #region 法术形态管理
 
     private 法术形态 当前形态;
+    public 形态配置 形态配置;
 
     protected  internal void 初始化形态(形态配置 配置)
     {
@@ -136,6 +133,23 @@ public abstract class 法术基础类 : MonoBehaviour
 
 
 
+    #endregion
+
+    #region 标签管理
+    public bool HasTag(ManifestationTag tag)  //标签校验
+    {
+        return (Tags & tag) == tag;
+    }
+
+    public void AddTag(ManifestationTag tag) //标签添加
+    {
+        Tags |= tag;
+    }
+
+    public void RemoveTag(ManifestationTag tag) //标签移除
+    {
+        Tags &= ~tag;
+    }
     #endregion
 
     #region 状态管理

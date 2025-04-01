@@ -73,11 +73,11 @@ public class 目标成分 : 法术成分
 
     public object 选定目标 { get; private set; }
 
-    public 目标成分(目标类型 类型)
+    public 目标成分(目标类型 类型, int 需求次数)
     {
         this.类型 = 成分类型.目标选择;
         需求类型 = 类型;
-        需求数量 = 1; // 目标选择只需一次
+        需求数量 = 需求次数; 
     }
 
     public override bool 验证条件(object 输入参数)
