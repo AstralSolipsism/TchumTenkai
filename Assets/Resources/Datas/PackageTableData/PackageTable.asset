@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d21477443070504b846211c20f9b0bf, type: 3}
+  m_Name: PackageTable
+  m_EditorClassIdentifier: 
+  dataList:
+  - uID: 10000
+    itemID: 0
+    type: 0
+    name: "\u971C\u4E4B\u54C0\u4F24"
+    description: "\u997F\u4E86"
+    imagePath: "Image/UI/Weapon/\u6B66\u5668_01.png"
+  - uID: 1000000
+    itemID: 1
+    type: 0
+    name: "\u7D2B\u6BD2\u4E4B\u523A"
+    description: "\u6709\u6BD2"
+    imagePath: "Image/UI/Weapon/\u6B66\u5668_02.png"
+  - uID: 300000
+    itemID: 2
+    type: 0
+    name: "\u5927\u5251"
+    description: "\u666E\u901A"
+    imagePath: "Image/UI/Weapon/\u6B66\u5668_03.png"
+  - uID: 4000
+    itemID: 3
+    type: 0
+    name: "\u6843\u77DB"
+    description: "\u61D2\u5F97\u5199\u4E86"
+    imagePath: "Image/UI/Weapon/\u6B66\u5668_04.png"
+  - uID: 600
+    itemID: 4
+    type: 0
+    name: "\u4EEA\u5F0F\u5315\u9996"
+    description: "\u5494\u5494"
+    imagePath: "Image/UI/Weapon/\u6B66\u5668_05.png"
